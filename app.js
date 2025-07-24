@@ -416,7 +416,7 @@ const FinanzasPersonales = () => {
         <div className="header-content">
           <div className="logo">
             <i className="fas fa-wallet"></i>
-            <span>Finanzas Personales</span>
+            <span>Finanzas - Odiamos a Yuanira</span>
           </div>
           
           <div className="header-controls">
