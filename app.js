@@ -529,10 +529,10 @@ const FinanzasPersonales = () => {
               Transacciones Recientes - {usuarioActivo} ({modoActivo})
             </h3>
             <div className="transactions-list">
-              {datosUsuario.transacciones && datosUsuario.transacciones.length > 0 ? (
-                datosUsuario.transacciones
-                  .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-                  .map(transaccion => (
+                {datosUsuario.transacciones && datosUsuario.transacciones.length > 0 ? (
+                  datosUsuario.transacciones.slice()
+                    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+                    .map(transaccion => (
                     <div key={transaccion.id} className="transaction-item">
                       <div className="transaction-info">
                         <div className={`transaction-icon ${transaccion.tipo}`}>
