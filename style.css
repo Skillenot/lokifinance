@@ -1337,3 +1337,12 @@ body {
     font-size: 1.5rem;
   }
 }
+/* Da espacio a los íconos de FontAwesome */
+.section-title i,
+.card-header i,
+h3.section-title i,
+.salary-config i,
+.form-section i {
+  margin-right: 8px;
+  /* Si algún icono va después del texto, puedes usar margin-left en vez de right */
+}
