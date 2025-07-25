@@ -4,10 +4,7 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjY2F4aW10YnJyZnB5bmhpbGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0ODA4ODksImV4cCI6MjA2OTA1Njg4OX0.a7yKKu6RhY116krsm9OuKueXF5VGbk6fbQcKsNQVcUw'
 );
 
-// Usuarios disponibles (puedes ampliar la lista si quieres)
 const USUARIOS = ["Santiago", "Juanita"];
-
-// Categorías
 const CATEGORIAS_GASTOS = [
   "Recibos públicos", "Entretenimiento", "Comida", "Transporte",
   "Salud", "Educación", "Ropa", "Hogar", "Otros"
@@ -16,7 +13,7 @@ const CATEGORIAS_INGRESOS = [
   "Salario", "Bonificaciones", "Ventas", "Inversiones", "Otros"
 ];
 
-// Utilidades para formato
+// Utilidades
 const formatCurrency = (amount) =>
   new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(amount);
 
@@ -39,8 +36,13 @@ const Notification = ({ message, type, onClose }) => {
 
 const FinanzasNube = () => {
   const [usuarioActivo, setUsuarioActivo] = React.useState('Santiago');
-  const [transacciones, setTransacciones] = React.useState([]); // Solo transacciones de Supabase
+  const [transacciones, setTransacciones] = React.useState([]);
   const [notification, setNotification] = React.useState(null);
+
+  // Salario desde la nube
+  const [salario, setSalario] = React.useState('');
+  const [nuevoSalario, setNuevoSalario] = React.useState('');
+  const [mostrarConfigSalario, setMostrarConfigSalario] = React.useState(false);
 
   // Formulario de nueva transacción
   const [formulario, setFormulario] = React.useState({
@@ -49,10 +51,6 @@ const FinanzasNube = () => {
     categoria: '',
     tipo: 'gasto'
   });
-
-  // Salario manual (NO guardado en Supabase todavía)
-  const [salario, setSalario] = React.useState('');
-  const [mostrarConfigSalario, setMostrarConfigSalario] = React.useState(false);
 
   // Cargar transacciones del usuario desde Supabase
   async function cargarTransacciones(usuario) {
@@ -70,10 +68,26 @@ const FinanzasNube = () => {
     }
   }
 
+  // Cargar salario del usuario desde Supabase
+  async function cargarSalario(usuario) {
+    const { data, error } = await supabase
+      .from('salarios')
+      .select('salario')
+      .eq('usuario', usuario)
+      .single();
+    if (error || !data) {
+      setSalario('');
+    } else {
+      setSalario(data.salario);
+    }
+  }
+
   // Al cambiar usuario, recargar datos
   React.useEffect(() => {
     cargarTransacciones(usuarioActivo);
-    setSalario('');
+    cargarSalario(usuarioActivo);
+    setMostrarConfigSalario(false);
+    setNuevoSalario('');
   }, [usuarioActivo]);
 
   // Resumen
@@ -151,6 +165,29 @@ const FinanzasNube = () => {
     cargarTransacciones(usuarioActivo);
   }
 
+  // Guardar salario en la nube
+  async function handleActualizarSalario(e) {
+    e.preventDefault();
+    if (!nuevoSalario || parseInt(nuevoSalario) <= 0) {
+      showNotification('Por favor ingresa un salario válido', 'error');
+      return;
+    }
+    // Si ya existe, actualiza, si no, inserta
+    const { data, error } = await supabase
+      .from('salarios')
+      .upsert([
+        { usuario: usuarioActivo, salario: parseInt(nuevoSalario) }
+      ]);
+    if (error) {
+      showNotification('Error al guardar salario', 'error');
+      return;
+    }
+    showNotification('Salario actualizado en la nube', 'success');
+    setMostrarConfigSalario(false);
+    cargarSalario(usuarioActivo);
+    setNuevoSalario('');
+  }
+
   // Chart.js - Gastos por categoría
   React.useEffect(() => {
     const ctx = document.getElementById('gastosChart');
@@ -203,7 +240,6 @@ const FinanzasNube = () => {
     });
   }, [usuarioActivo, transacciones]);
 
-  // Categorías disponibles
   const categoriasDisponibles = formulario.tipo === 'gasto'
     ? CATEGORIAS_GASTOS
     : CATEGORIAS_INGRESOS;
@@ -346,8 +382,16 @@ const FinanzasNube = () => {
               Salario Mensual - {usuarioActivo}
             </h3>
             <div className="current-salary">
-              <div className="salary-amount">{salario ? formatCurrency(Number(salario)) : <span style={{color:'#a78bfa'}}>No configurado</span>}</div>
-              <p>Salario manual (solo visible localmente)</p>
+              {salario && Number(salario) > 0 ? (
+                <div className="salary-amount">{formatCurrency(Number(salario))}</div>
+              ) : (
+                <div className="salary-amount" style={{color:'#a78bfa'}}>No configurado</div>
+              )}
+              <p style={{color:'#aaa'}}>
+                {salario && Number(salario) > 0 
+                  ? "Salario guardado en la nube." 
+                  : "No se ha configurado el salario para este usuario."}
+              </p>
             </div>
             {!mostrarConfigSalario ? (
               <button 
@@ -355,20 +399,17 @@ const FinanzasNube = () => {
                 onClick={() => setMostrarConfigSalario(true)}
               >
                 <i className="fas fa-edit"></i>
-                Actualizar Salario
+                {salario && Number(salario) > 0 ? "Actualizar Salario" : "Configurar Salario"}
               </button>
             ) : (
-              <form onSubmit={e => {
-                e.preventDefault();
-                setMostrarConfigSalario(false);
-              }}>
+              <form onSubmit={handleActualizarSalario}>
                 <div className="form-group">
                   <label className="form-label">Nuevo salario</label>
                   <input
                     type="number"
                     className="form-input"
-                    value={salario}
-                    onChange={(e) => setSalario(e.target.value)}
+                    value={nuevoSalario}
+                    onChange={(e) => setNuevoSalario(e.target.value)}
                     placeholder="Ingresa tu salario mensual"
                     min="1"
                   />
@@ -376,14 +417,14 @@ const FinanzasNube = () => {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
                     <i className="fas fa-save"></i>
-                    Guardar (solo local)
+                    Guardar
                   </button>
                   <button 
                     type="button" 
                     className="btn btn-secondary"
                     onClick={() => {
                       setMostrarConfigSalario(false);
-                      setSalario('');
+                      setNuevoSalario('');
                     }}
                   >
                     <i className="fas fa-times"></i>
@@ -391,9 +432,6 @@ const FinanzasNube = () => {
                 </div>
               </form>
             )}
-            <p style={{ fontSize: '0.85rem', color: '#8b8b8b', textAlign: 'center', marginTop:8 }}>
-              <i className="fas fa-info-circle"></i> Próximamente podrás guardar el salario real en la nube.
-            </p>
           </div>
 
           {/* Formulario para nueva transacción */}
