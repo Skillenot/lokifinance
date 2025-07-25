@@ -76,6 +76,45 @@ const INITIAL_DATA = {
         }
       ]
     }
+  },
+  datosNube: {
+    Santiago: {
+      salario: 3800000,
+      transacciones: [
+        {
+          id: 101,
+          descripcion: "Salario mensual (Nube)",
+          cantidad: 3800000,
+          categoria: "Salario",
+          tipo: "ingreso",
+          fecha: "2025-01-01",
+          usuario: "Santiago"
+        },
+        {
+          id: 102,
+          descripcion: "Factura agua (Nube)",
+          cantidad: 85000,
+          categoria: "Recibos públicos",
+          tipo: "gasto",
+          fecha: "2025-01-03",
+          usuario: "Santiago"
+        }
+      ]
+    },
+    Juanita: {
+      salario: 3200000,
+      transacciones: [
+        {
+          id: 103,
+          descripcion: "Salario mensual (Nube)",
+          cantidad: 3200000,
+          categoria: "Salario",
+          tipo: "ingreso",
+          fecha: "2025-01-01",
+          usuario: "Juanita"
+        }
+      ]
+    }
   }
 };
 
@@ -121,6 +160,9 @@ const FinanzasPersonales = () => {
     // Hacer una copia profunda de los datos iniciales para evitar mutaciones
     return JSON.parse(JSON.stringify(INITIAL_DATA.datosEjemplo));
   });
+  const [datosUsuariosNube, setDatosUsuariosNube] = React.useState(() => {
+    return JSON.parse(JSON.stringify(INITIAL_DATA.datosNube));
+  });
   const [notification, setNotification] = React.useState(null);
   
   // Estados para el formulario de nueva transacción
@@ -141,47 +183,8 @@ const FinanzasPersonales = () => {
       // En modo local, usamos los datos del estado
       return datosUsuarios[usuarioActivo] || { salario: 0, transacciones: [] };
     } else {
-      // En modo nube, simulamos datos diferentes (podrían venir de una API)
-      const datosNube = {
-        Santiago: {
-          salario: 3800000,
-          transacciones: [
-            {
-              id: 101,
-              descripcion: "Salario mensual (Nube)",
-              cantidad: 3800000,
-              categoria: "Salario",
-              tipo: "ingreso",
-              fecha: "2025-01-01",
-              usuario: "Santiago"
-            },
-            {
-              id: 102,
-              descripcion: "Factura agua (Nube)",
-              cantidad: 85000,
-              categoria: "Recibos públicos",
-              tipo: "gasto",
-              fecha: "2025-01-03",
-              usuario: "Santiago"
-            }
-          ]
-        },
-        Juanita: {
-          salario: 3200000,
-          transacciones: [
-            {
-              id: 103,
-              descripcion: "Salario mensual (Nube)",
-              cantidad: 3200000,
-              categoria: "Salario",
-              tipo: "ingreso",
-              fecha: "2025-01-01",
-              usuario: "Juanita"
-            }
-          ]
-        }
-      };
-      return datosNube[usuarioActivo] || { salario: 0, transacciones: [] };
+      // En modo nube, usamos los datos del estado de la nube
+      return datosUsuariosNube[usuarioActivo] || { salario: 0, transacciones: [] };
     }
   };
 
@@ -341,6 +344,20 @@ const FinanzasPersonales = () => {
     showNotification('Salario actualizado exitosamente', 'success');
   };
 
+  // Eliminar una transacción en la nube
+  const handleEliminarTransaccion = (id) => {
+    if (modoActivo !== 'Nube') return;
+
+    setDatosUsuariosNube(prev => {
+      const nuevos = { ...prev };
+      if (nuevos[usuarioActivo]) {
+        nuevos[usuarioActivo].transacciones = nuevos[usuarioActivo].transacciones.filter(t => t.id !== id);
+      }
+      return nuevos;
+    });
+    showNotification('Transacción eliminada en la nube', 'success');
+  };
+
   // Crear/actualizar gráfico de gastos
   React.useEffect(() => {
     const ctx = document.getElementById('gastosChart');
@@ -393,7 +410,7 @@ const FinanzasPersonales = () => {
         }
       }
     });
-  }, [usuarioActivo, modoActivo, datosUsuarios]);
+  }, [usuarioActivo, modoActivo, datosUsuarios, datosUsuariosNube]);
 
   // Obtener datos computados
   const resumen = calcularResumen();
@@ -526,8 +543,15 @@ const FinanzasPersonales = () => {
                           <p>{transaccion.categoria} • {formatDate(transaccion.fecha)}</p>
                         </div>
                       </div>
-                      <div className={`transaction-amount ${transaccion.tipo}`}>
-                        {transaccion.tipo === 'ingreso' ? '+' : '-'}{formatCurrency(transaccion.cantidad)}
+                      <div className="transaction-actions">
+                        <div className={`transaction-amount ${transaccion.tipo}`}>
+                          {transaccion.tipo === 'ingreso' ? '+' : '-'}{formatCurrency(transaccion.cantidad)}
+                        </div>
+                        {modoActivo === 'Nube' && (
+                          <button className="delete-btn" onClick={() => handleEliminarTransaccion(transaccion.id)}>
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))
@@ -601,7 +625,7 @@ const FinanzasPersonales = () => {
 
             {modoActivo === 'Nube' && (
               <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', textAlign: 'center' }}>
-                Los datos en la nube son de solo lectura
+                En la nube solo puedes eliminar transacciones
               </p>
             )}
           </div>
