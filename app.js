@@ -77,45 +77,17 @@ const INITIAL_DATA = {
       ]
     }
   },
-  datosNube: {
-    Santiago: {
-      salario: 3800000,
-      transacciones: [
-        {
-          id: 101,
-          descripcion: "Salario mensual (Nube)",
-          cantidad: 3800000,
-          categoria: "Salario",
-          tipo: "ingreso",
-          fecha: "2025-01-01",
-          usuario: "Santiago"
-        },
-        {
-          id: 102,
-          descripcion: "Factura agua (Nube)",
-          cantidad: 85000,
-          categoria: "Recibos públicos",
-          tipo: "gasto",
-          fecha: "2025-01-03",
-          usuario: "Santiago"
-        }
-      ]
-    },
-    Juanita: {
-      salario: 3200000,
-      transacciones: [
-        {
-          id: 103,
-          descripcion: "Salario mensual (Nube)",
-          cantidad: 3200000,
-          categoria: "Salario",
-          tipo: "ingreso",
-          fecha: "2025-01-01",
-          usuario: "Juanita"
-        }
-      ]
-    }
+datosNube: {
+  Santiago: {
+    salario: 0,
+    transacciones: []
+  },
+  Juanita: {
+    salario: 0,
+    transacciones: []
   }
+}
+
 };
 
 // Utilidades para formatear números como moneda colombiana
