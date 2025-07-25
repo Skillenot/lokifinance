@@ -1,112 +1,34 @@
-// Datos iniciales de la aplicación
+// Datos iniciales de la aplicación SOLO NUBE
 const INITIAL_DATA = {
   usuarios: ["Santiago", "Juanita"],
-  modos: ["Local", "Nube"],
   categoriasGastos: [
-    "Recibos públicos",
-    "Entretenimiento", 
-    "Comida",
-    "Transporte",
-    "Salud",
-    "Educación",
-    "Ropa",
-    "Hogar",
-    "Otros"
+    "Recibos públicos", "Entretenimiento", "Comida", "Transporte",
+    "Salud", "Educación", "Ropa", "Hogar", "Otros"
   ],
   categoriasIngresos: [
-    "Salario",
-    "Bonificaciones",
-    "Ventas", 
-    "Inversiones",
-    "Otros"
+    "Salario", "Bonificaciones", "Ventas", "Inversiones", "Otros"
   ],
-  datosEjemplo: {
-    Santiago: {
-      salario: 3500000,
-      transacciones: [
-        {
-          id: 1,
-          descripcion: "Salario mensual",
-          cantidad: 3500000,
-          categoria: "Salario",
-          tipo: "ingreso",
-          fecha: "2025-01-01",
-          usuario: "Santiago"
-        },
-        {
-          id: 2,
-          descripcion: "Factura de luz",
-          cantidad: 150000,
-          categoria: "Recibos públicos",
-          tipo: "gasto",
-          fecha: "2025-01-05", 
-          usuario: "Santiago"
-        },
-        {
-          id: 3,
-          descripcion: "Supermercado",
-          cantidad: 400000,
-          categoria: "Comida",
-          tipo: "gasto",
-          fecha: "2025-01-08",
-          usuario: "Santiago"
-        }
-      ]
-    },
-    Juanita: {
-      salario: 2800000,
-      transacciones: [
-        {
-          id: 4,
-          descripcion: "Salario mensual",
-          cantidad: 2800000,
-          categoria: "Salario", 
-          tipo: "ingreso",
-          fecha: "2025-01-01",
-          usuario: "Juanita"
-        },
-        {
-          id: 5,
-          descripcion: "Netflix",
-          cantidad: 45000,
-          categoria: "Entretenimiento",
-          tipo: "gasto",
-          fecha: "2025-01-10",
-          usuario: "Juanita"
-        }
-      ]
-    }
-  },
-datosNube: {
-  Santiago: {
-    salario: 0,
-    transacciones: []
-  },
-  Juanita: {
-    salario: 0,
-    transacciones: []
+  datosNube: {
+    Santiago: { salario: 0, transacciones: [] },
+    Juanita: { salario: 0, transacciones: [] }
   }
-}
-
 };
 
-// Utilidades para formatear números como moneda colombiana
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('es-CO', {
+// Utilidad para formatear moneda COP
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
     minimumFractionDigits: 0
   }).format(amount);
-};
 
-// Utilidades para formatear fechas
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('es-CO', {
+// Utilidad para formatear fechas
+const formatDate = (dateString) =>
+  new Date(dateString).toLocaleDateString('es-CO', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
-};
 
 // Componente de notificación
 const Notification = ({ message, type, onClose }) => {
@@ -123,21 +45,15 @@ const Notification = ({ message, type, onClose }) => {
   );
 };
 
-// Componente principal de la aplicación
-const FinanzasPersonales = () => {
-  // Estados principales de la aplicación
+// Componente principal SOLO NUBE
+const FinanzasNube = () => {
   const [usuarioActivo, setUsuarioActivo] = React.useState('Santiago');
-  const [modoActivo, setModoActivo] = React.useState('Local');
-  const [datosUsuarios, setDatosUsuarios] = React.useState(() => {
-    // Hacer una copia profunda de los datos iniciales para evitar mutaciones
-    return JSON.parse(JSON.stringify(INITIAL_DATA.datosEjemplo));
-  });
   const [datosUsuariosNube, setDatosUsuariosNube] = React.useState(() => {
     return JSON.parse(JSON.stringify(INITIAL_DATA.datosNube));
   });
   const [notification, setNotification] = React.useState(null);
-  
-  // Estados para el formulario de nueva transacción
+
+  // Formulario nueva transacción
   const [formulario, setFormulario] = React.useState({
     descripcion: '',
     cantidad: '',
@@ -145,50 +61,25 @@ const FinanzasPersonales = () => {
     tipo: 'gasto'
   });
 
-  // Estados para configuración de salario
+  // Formulario de salario
   const [nuevoSalario, setNuevoSalario] = React.useState('');
   const [mostrarConfigSalario, setMostrarConfigSalario] = React.useState(false);
 
-  // Obtener datos del usuario activo según el modo
-  const getDatosUsuario = () => {
-    if (modoActivo === 'Local') {
-      // En modo local, usamos los datos del estado
-      return datosUsuarios[usuarioActivo] || { salario: 0, transacciones: [] };
-    } else {
-      // En modo nube, usamos los datos del estado de la nube
-      return datosUsuariosNube[usuarioActivo] || { salario: 0, transacciones: [] };
-    }
-  };
+  // Obtener datos del usuario activo
+  const datosUsuario = datosUsuariosNube[usuarioActivo] || { salario: 0, transacciones: [] };
 
-  // Calcular resumen financiero del usuario
-  const calcularResumen = () => {
-    const datosUsuario = getDatosUsuario();
-    const transacciones = datosUsuario.transacciones || [];
-    
-    const totalIngresos = transacciones
-      .filter(t => t.tipo === 'ingreso')
-      .reduce((sum, t) => sum + t.cantidad, 0);
-    
-    const totalGastos = transacciones
-      .filter(t => t.tipo === 'gasto')
-      .reduce((sum, t) => sum + t.cantidad, 0);
-    
-    const balance = totalIngresos - totalGastos;
-    
-    return { totalIngresos, totalGastos, balance };
-  };
+  // Calcular resumen financiero
+  const totalIngresos = datosUsuario.transacciones.filter(t => t.tipo === 'ingreso').reduce((sum, t) => sum + t.cantidad, 0);
+  const totalGastos = datosUsuario.transacciones.filter(t => t.tipo === 'gasto').reduce((sum, t) => sum + t.cantidad, 0);
+  const balance = totalIngresos - totalGastos;
 
-  // Obtener gastos por categoría para el gráfico
+  // Gastos por categoría (para gráfico)
   const getGastosPorCategoria = () => {
-    const datosUsuario = getDatosUsuario();
-    const gastos = datosUsuario.transacciones?.filter(t => t.tipo === 'gasto') || [];
-    
+    const gastos = datosUsuario.transacciones.filter(t => t.tipo === 'gasto');
     const gastosPorCategoria = {};
     gastos.forEach(gasto => {
-      gastosPorCategoria[gasto.categoria] = 
-        (gastosPorCategoria[gasto.categoria] || 0) + gasto.cantidad;
+      gastosPorCategoria[gasto.categoria] = (gastosPorCategoria[gasto.categoria] || 0) + gasto.cantidad;
     });
-    
     return gastosPorCategoria;
   };
 
@@ -197,62 +88,33 @@ const FinanzasPersonales = () => {
     setNotification({ message, type });
   };
 
-  // Manejar cambio de usuario
+  // Cambiar usuario
   const handleUsuarioChange = (e) => {
     const nuevoUsuario = e.target.value;
     setUsuarioActivo(nuevoUsuario);
-    // Limpiar formulario al cambiar usuario
-    setFormulario({
-      descripcion: '',
-      cantidad: '',
-      categoria: '',
-      tipo: 'gasto'
-    });
+    setFormulario({ descripcion: '', cantidad: '', categoria: '', tipo: 'gasto' });
     showNotification(`Cambiado a usuario: ${nuevoUsuario}`, 'success');
   };
 
-  // Manejar cambio de modo
-  const handleModoChange = (nuevoModo) => {
-    setModoActivo(nuevoModo);
-    // Limpiar formulario al cambiar modo
-    setFormulario({
-      descripcion: '',
-      cantidad: '',
-      categoria: '',
-      tipo: 'gasto'
-    });
-    showNotification(`Modo cambiado a: ${nuevoModo}`, 'success');
-  };
-
-  // Manejar envío del formulario de nueva transacción
+  // Añadir transacción
   const handleSubmitTransaccion = (e) => {
     e.preventDefault();
-    
-    // Validar formulario
+
     if (!formulario.descripcion.trim()) {
       showNotification('Por favor ingresa una descripción', 'error');
       return;
     }
-    
     if (!formulario.cantidad || parseInt(formulario.cantidad) <= 0) {
       showNotification('Por favor ingresa una cantidad válida mayor a 0', 'error');
       return;
     }
-    
     if (!formulario.categoria) {
       showNotification('Por favor selecciona una categoría', 'error');
       return;
     }
 
-    // Solo permitir agregar transacciones en modo local
-    if (modoActivo !== 'Local') {
-      showNotification('Solo puedes agregar transacciones en modo Local', 'error');
-      return;
-    }
-
-    // Crear nueva transacción
     const nuevaTransaccion = {
-      id: Date.now(), // ID único basado en timestamp
+      id: Date.now(),
       descripcion: formulario.descripcion.trim(),
       cantidad: parseInt(formulario.cantidad),
       categoria: formulario.categoria,
@@ -261,65 +123,47 @@ const FinanzasPersonales = () => {
       usuario: usuarioActivo
     };
 
-    // Actualizar datos del usuario
-    setDatosUsuarios(prev => {
-      const nuevosDatos = { ...prev };
-      if (!nuevosDatos[usuarioActivo]) {
-        nuevosDatos[usuarioActivo] = { salario: 0, transacciones: [] };
+    setDatosUsuariosNube(prev => {
+      const nuevos = { ...prev };
+      if (!nuevos[usuarioActivo]) {
+        nuevos[usuarioActivo] = { salario: 0, transacciones: [] };
       }
-      nuevosDatos[usuarioActivo] = {
-        ...nuevosDatos[usuarioActivo],
-        transacciones: [...(nuevosDatos[usuarioActivo].transacciones || []), nuevaTransaccion]
+      nuevos[usuarioActivo] = {
+        ...nuevos[usuarioActivo],
+        transacciones: [...(nuevos[usuarioActivo].transacciones || []), nuevaTransaccion]
       };
-      return nuevosDatos;
+      return nuevos;
     });
 
-    // Limpiar formulario
-    setFormulario({
-      descripcion: '',
-      cantidad: '',
-      categoria: '',
-      tipo: 'gasto'
-    });
-
+    setFormulario({ descripcion: '', cantidad: '', categoria: '', tipo: 'gasto' });
     showNotification('Transacción agregada exitosamente', 'success');
   };
 
-  // Manejar actualización de salario
+  // Actualizar salario
   const handleActualizarSalario = (e) => {
     e.preventDefault();
-    
     if (!nuevoSalario || parseInt(nuevoSalario) <= 0) {
       showNotification('Por favor ingresa un salario válido', 'error');
       return;
     }
-
-    if (modoActivo !== 'Local') {
-      showNotification('Solo puedes actualizar el salario en modo Local', 'error');
-      return;
-    }
-
-    setDatosUsuarios(prev => {
-      const nuevosDatos = { ...prev };
-      if (!nuevosDatos[usuarioActivo]) {
-        nuevosDatos[usuarioActivo] = { salario: 0, transacciones: [] };
+    setDatosUsuariosNube(prev => {
+      const nuevos = { ...prev };
+      if (!nuevos[usuarioActivo]) {
+        nuevos[usuarioActivo] = { salario: 0, transacciones: [] };
       }
-      nuevosDatos[usuarioActivo] = {
-        ...nuevosDatos[usuarioActivo],
+      nuevos[usuarioActivo] = {
+        ...nuevos[usuarioActivo],
         salario: parseInt(nuevoSalario)
       };
-      return nuevosDatos;
+      return nuevos;
     });
-
     setNuevoSalario('');
     setMostrarConfigSalario(false);
     showNotification('Salario actualizado exitosamente', 'success');
   };
 
-  // Eliminar una transacción en la nube
+  // Eliminar transacción
   const handleEliminarTransaccion = (id) => {
-    if (modoActivo !== 'Nube') return;
-
     setDatosUsuariosNube(prev => {
       const nuevos = { ...prev };
       if (nuevos[usuarioActivo]) {
@@ -327,16 +171,15 @@ const FinanzasPersonales = () => {
       }
       return nuevos;
     });
-    showNotification('Transacción eliminada en la nube', 'success');
+    showNotification('Transacción eliminada', 'success');
   };
 
-  // Crear/actualizar gráfico de gastos
+  // Gráfico de gastos (con Chart.js)
   React.useEffect(() => {
     const ctx = document.getElementById('gastosChart');
     if (!ctx) return;
 
-    // Limpiar gráfico anterior
-    const existingChart = Chart.getChart(ctx);
+    const existingChart = window.gastosChartInstance;
     if (existingChart) {
       existingChart.destroy();
     }
@@ -346,6 +189,7 @@ const FinanzasPersonales = () => {
     const data = Object.values(gastosPorCategoria);
 
     if (labels.length === 0) {
+      window.gastosChartInstance = null;
       return;
     }
 
@@ -354,7 +198,7 @@ const FinanzasPersonales = () => {
       '#5B21B6', '#4C1D95', '#EF4444', '#F59E0B', '#10B981'
     ];
 
-    new Chart(ctx, {
+    window.gastosChartInstance = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: labels,
@@ -373,21 +217,19 @@ const FinanzasPersonales = () => {
             position: 'bottom',
             labels: {
               color: '#ffffff',
-              font: {
-                size: 12
-              },
+              font: { size: 12 },
               padding: 15
             }
           }
         }
       }
     });
-  }, [usuarioActivo, modoActivo, datosUsuarios, datosUsuariosNube]);
+  }, [usuarioActivo, datosUsuariosNube]);
 
-  // Obtener datos computados
-  const resumen = calcularResumen();
-  const datosUsuario = getDatosUsuario();
-  const categoriasDisponibles = formulario.tipo === 'gasto' ? INITIAL_DATA.categoriasGastos : INITIAL_DATA.categoriasIngresos;
+  // Categorías según tipo
+  const categoriasDisponibles = formulario.tipo === 'gasto'
+    ? INITIAL_DATA.categoriasGastos
+    : INITIAL_DATA.categoriasIngresos;
 
   return (
     <div className="app">
@@ -400,16 +242,14 @@ const FinanzasPersonales = () => {
         />
       )}
 
-      {/* Header principal */}
+      {/* Header */}
       <header className="header">
         <div className="header-content">
           <div className="logo">
             <i className="fas fa-wallet"></i>
-            <span>Finanzas - Odiamos a Yuanira</span>
+            <span>Finanzas en la Nube</span>
           </div>
-          
           <div className="header-controls">
-            {/* Selector de usuario */}
             <div className="select-wrapper">
               <select 
                 className="select" 
@@ -421,19 +261,9 @@ const FinanzasPersonales = () => {
                 ))}
               </select>
             </div>
-
-            {/* Toggle modo local/nube */}
-            <div className="mode-toggle">
-              {INITIAL_DATA.modos.map(modo => (
-                <div
-                  key={modo}
-                  className={`mode-option ${modoActivo === modo ? 'active' : ''}`}
-                  onClick={() => handleModoChange(modo)}
-                >
-                  <i className={`fas ${modo === 'Local' ? 'fa-hdd' : 'fa-cloud'}`}></i>
-                  {modo}
-                </div>
-              ))}
+            <div className="nube-box">
+              <i className="fas fa-cloud"></i>
+              <span style={{marginLeft:'8px'}}>Estás en la nube</span>
             </div>
           </div>
         </div>
@@ -441,9 +271,9 @@ const FinanzasPersonales = () => {
 
       {/* Contenido principal */}
       <main className="main-content">
-        {/* Dashboard principal */}
+        {/* Dashboard */}
         <div className="dashboard">
-          {/* Tarjetas de resumen financiero */}
+          {/* Resumen */}
           <div className="summary-cards">
             <div className="summary-card balance">
               <div className="card-header">
@@ -452,7 +282,7 @@ const FinanzasPersonales = () => {
                   <i className="fas fa-balance-scale"></i>
                 </div>
               </div>
-              <div className="card-amount">{formatCurrency(resumen.balance)}</div>
+              <div className="card-amount">{formatCurrency(balance)}</div>
             </div>
 
             <div className="summary-card income">
@@ -462,7 +292,7 @@ const FinanzasPersonales = () => {
                   <i className="fas fa-arrow-up"></i>
                 </div>
               </div>
-              <div className="card-amount">{formatCurrency(resumen.totalIngresos)}</div>
+              <div className="card-amount">{formatCurrency(totalIngresos)}</div>
             </div>
 
             <div className="summary-card expense">
@@ -472,15 +302,15 @@ const FinanzasPersonales = () => {
                   <i className="fas fa-arrow-down"></i>
                 </div>
               </div>
-              <div className="card-amount">{formatCurrency(resumen.totalGastos)}</div>
+              <div className="card-amount">{formatCurrency(totalGastos)}</div>
             </div>
           </div>
 
-          {/* Gráfico de gastos por categoría */}
+          {/* Gráfico */}
           <div className="chart-section">
             <h3 className="section-title">
               <i className="fas fa-chart-pie"></i>
-              Gastos por Categoría - {usuarioActivo} ({modoActivo})
+              Gastos por Categoría - {usuarioActivo}
             </h3>
             <div className="chart-container">
               {Object.keys(getGastosPorCategoria()).length > 0 ? (
@@ -498,7 +328,7 @@ const FinanzasPersonales = () => {
           <div className="transactions-section">
             <h3 className="section-title">
               <i className="fas fa-list"></i>
-              Transacciones Recientes - {usuarioActivo} ({modoActivo})
+              Transacciones Recientes - {usuarioActivo}
             </h3>
             <div className="transactions-list">
                 {datosUsuario.transacciones && datosUsuario.transacciones.length > 0 ? (
@@ -519,11 +349,9 @@ const FinanzasPersonales = () => {
                         <div className={`transaction-amount ${transaccion.tipo}`}>
                           {transaccion.tipo === 'ingreso' ? '+' : '-'}{formatCurrency(transaccion.cantidad)}
                         </div>
-                        {modoActivo === 'Nube' && (
-                          <button className="delete-btn" onClick={() => handleEliminarTransaccion(transaccion.id)}>
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        )}
+                        <button className="delete-btn" onClick={() => handleEliminarTransaccion(transaccion.id)}>
+                          <i className="fas fa-trash"></i>
+                        </button>
                       </div>
                     </div>
                   ))
@@ -545,60 +373,48 @@ const FinanzasPersonales = () => {
               <i className="fas fa-money-bill-wave"></i>
               Salario Mensual - {usuarioActivo}
             </h3>
-            
             <div className="current-salary">
               <div className="salary-amount">{formatCurrency(datosUsuario.salario || 0)}</div>
-              <p>Salario actual ({modoActivo})</p>
+              <p>Salario actual (Nube)</p>
             </div>
-
-            {modoActivo === 'Local' && (
-              <>
-                {!mostrarConfigSalario ? (
-                  <button 
-                    className="btn btn-secondary btn-full"
-                    onClick={() => setMostrarConfigSalario(true)}
-                  >
-                    <i className="fas fa-edit"></i>
-                    Actualizar Salario
+            {!mostrarConfigSalario ? (
+              <button 
+                className="btn btn-secondary btn-full"
+                onClick={() => setMostrarConfigSalario(true)}
+              >
+                <i className="fas fa-edit"></i>
+                Actualizar Salario
+              </button>
+            ) : (
+              <form onSubmit={handleActualizarSalario}>
+                <div className="form-group">
+                  <label className="form-label">Nuevo salario</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={nuevoSalario}
+                    onChange={(e) => setNuevoSalario(e.target.value)}
+                    placeholder="Ingresa tu salario mensual"
+                    min="1"
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
+                    <i className="fas fa-save"></i>
+                    Guardar
                   </button>
-                ) : (
-                  <form onSubmit={handleActualizarSalario}>
-                    <div className="form-group">
-                      <label className="form-label">Nuevo salario</label>
-                      <input
-                        type="number"
-                        className="form-input"
-                        value={nuevoSalario}
-                        onChange={(e) => setNuevoSalario(e.target.value)}
-                        placeholder="Ingresa tu salario mensual"
-                        min="1"
-                      />
-                    </div>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
-                        <i className="fas fa-save"></i>
-                        Guardar
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn btn-secondary"
-                        onClick={() => {
-                          setMostrarConfigSalario(false);
-                          setNuevoSalario('');
-                        }}
-                      >
-                        <i className="fas fa-times"></i>
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </>
-            )}
-
-            {modoActivo === 'Nube' && (
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', textAlign: 'center' }}>
-                En la nube solo puedes eliminar transacciones
-              </p>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setMostrarConfigSalario(false);
+                      setNuevoSalario('');
+                    }}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
+              </form>
             )}
           </div>
 
@@ -608,79 +424,64 @@ const FinanzasPersonales = () => {
               <i className="fas fa-plus-circle"></i>
               Nueva Transacción
             </h3>
-
-            {modoActivo === 'Local' ? (
-              <form onSubmit={handleSubmitTransaccion}>
-                <div className="form-group">
-                  <label className="form-label">Tipo</label>
-                  <select
-                    className="form-select"
-                    value={formulario.tipo}
-                    onChange={(e) => setFormulario({...formulario, tipo: e.target.value, categoria: ''})}
-                  >
-                    <option value="gasto">Gasto</option>
-                    <option value="ingreso">Ingreso</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Descripción</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formulario.descripcion}
-                    onChange={(e) => setFormulario({...formulario, descripcion: e.target.value})}
-                    placeholder="Ej: Compra de supermercado"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Cantidad (COP)</label>
-                  <input
-                    type="number"
-                    className="form-input"
-                    value={formulario.cantidad}
-                    onChange={(e) => setFormulario({...formulario, cantidad: e.target.value})}
-                    placeholder="0"
-                    min="1"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Categoría</label>
-                  <select
-                    className="form-select"
-                    value={formulario.categoria}
-                    onChange={(e) => setFormulario({...formulario, categoria: e.target.value})}
-                    required
-                  >
-                    <option value="">Selecciona una categoría</option>
-                    {categoriasDisponibles.map(categoria => (
-                      <option key={categoria} value={categoria}>{categoria}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <button type="submit" className="btn btn-primary btn-full">
-                  <i className="fas fa-plus"></i>
-                  Agregar Transacción
-                </button>
-              </form>
-            ) : (
-              <div className="empty-state">
-                <i className="fas fa-lock"></i>
-                <p>Solo puedes agregar transacciones en modo Local</p>
-                <button 
-                  className="btn btn-primary"
-                  onClick={() => handleModoChange('Local')}
-                  style={{ marginTop: '16px' }}
+            <form onSubmit={handleSubmitTransaccion}>
+              <div className="form-group">
+                <label className="form-label">Tipo</label>
+                <select
+                  className="form-select"
+                  value={formulario.tipo}
+                  onChange={(e) => setFormulario({...formulario, tipo: e.target.value, categoria: ''})}
                 >
-                  Cambiar a Modo Local
-                </button>
+                  <option value="gasto">Gasto</option>
+                  <option value="ingreso">Ingreso</option>
+                </select>
               </div>
-            )}
+
+              <div className="form-group">
+                <label className="form-label">Descripción</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formulario.descripcion}
+                  onChange={(e) => setFormulario({...formulario, descripcion: e.target.value})}
+                  placeholder="Ej: Compra de supermercado"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Cantidad (COP)</label>
+                <input
+                  type="number"
+                  className="form-input"
+                  value={formulario.cantidad}
+                  onChange={(e) => setFormulario({...formulario, cantidad: e.target.value})}
+                  placeholder="0"
+                  min="1"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Categoría</label>
+                <select
+                  className="form-select"
+                  value={formulario.categoria}
+                  onChange={(e) => setFormulario({...formulario, categoria: e.target.value})}
+                  required
+                >
+                  <option value="">Selecciona una categoría</option>
+                  {categoriasDisponibles.map(categoria => (
+                    <option key={categoria} value={categoria}>{categoria}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button type="submit" className="btn btn-primary btn-full">
+                <i className="fas fa-plus"></i>
+                Agregar Transacción
+              </button>
+            </form>
           </div>
         </aside>
       </main>
@@ -688,5 +489,5 @@ const FinanzasPersonales = () => {
   );
 };
 
-// Renderizar la aplicación
-ReactDOM.render(<FinanzasPersonales />, document.getElementById('root'));
+// Renderizar la app
+ReactDOM.render(<FinanzasNube />, document.getElementById('root'));
