@@ -20,6 +20,9 @@
     <div id="root"></div>
     
     <!-- Script principal de la aplicación -->
+     <script type="module">
+  window.supabase = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm')
+</script>
     <script type="text/babel" src="app.js"></script>
 </body>
 </html>
