@@ -1,5 +1,5 @@
-const { createClient } = window.supabase;
-const supabase = createClient(
+// Inicializar Supabase
+const supabase = supabaseJs.createClient(
   'https://wccaximtbrrfpynhildy.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjY2F4aW10YnJyZnB5bmhpbGR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0ODA4ODksImV4cCI6MjA2OTA1Njg4OX0.a7yKKu6RhY116krsm9OuKueXF5VGbk6fbQcKsNQVcUw'
 );
@@ -38,7 +38,7 @@ const FinanzasNube = () => {
   const [usuarioActivo, setUsuarioActivo] = React.useState('Santiago');
   const [transacciones, setTransacciones] = React.useState([]);
   const [notification, setNotification] = React.useState(null);
-  // Añadir estado para el tema
+  // Estado para el tema
   const [theme, setTheme] = React.useState('light');
 
   // Función para cambiar el tema
@@ -46,6 +46,7 @@ const FinanzasNube = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   // Establecer el tema inicial
@@ -54,11 +55,6 @@ const FinanzasNube = () => {
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
-
-  // Guardar el tema cuando cambie
-  React.useEffect(() => {
-    localStorage.setItem('theme', theme);
-  }, [theme]);
 
   // Salario desde la nube
   const [salario, setSalario] = React.useState('');
@@ -576,7 +572,9 @@ const FinanzasNube = () => {
 };
 
 // Renderizar la app (esto debe estar en tu index.html o main)
-ReactDOM.render(<FinanzasNube />, document.getElementById('root'));
+// Renderizar la app
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<FinanzasNube />);
 
 const FinanzasNube = () => {
   const [usuarioActivo, setUsuarioActivo] = React.useState('Santiago');
