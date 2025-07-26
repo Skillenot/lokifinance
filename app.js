@@ -38,6 +38,27 @@ const FinanzasNube = () => {
   const [usuarioActivo, setUsuarioActivo] = React.useState('Santiago');
   const [transacciones, setTransacciones] = React.useState([]);
   const [notification, setNotification] = React.useState(null);
+  // Añadir estado para el tema
+  const [theme, setTheme] = React.useState('light');
+
+  // Función para cambiar el tema
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
+  // Establecer el tema inicial
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  // Guardar el tema cuando cambie
+  React.useEffect(() => {
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // Salario desde la nube
   const [salario, setSalario] = React.useState('');
@@ -730,9 +751,11 @@ const FinanzasNube = () => {
       return;
     }
 
+    // Paleta de colores mejorada
     const colores = [
-      '#8B5CF6', '#A855F7', '#9333EA', '#7C3AED', '#6D28D9',
-      '#5B21B6', '#4C1D95', '#EF4444', '#F59E0B', '#10B981'
+      '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe',
+      '#ef4444', '#f87171', '#fca5a5', '#fecaca', '#fee2e2',
+      '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'
     ];
 
     window.gastosChartInstance = new Chart(ctx, {
@@ -742,22 +765,50 @@ const FinanzasNube = () => {
         datasets: [{
           data: data,
           backgroundColor: colores.slice(0, labels.length),
-          borderColor: '#1a1a1a',
-          borderWidth: 2
+          borderColor: 'transparent',
+          borderWidth: 2,
+          hoverOffset: 15
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '70%',
         plugins: {
           legend: {
             position: 'bottom',
             labels: {
-              color: '#ffffff',
-              font: { size: 12 },
-              padding: 15
+              color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary'),
+              font: { size: 12, weight: '500' },
+              padding: 15,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--color-surface-elevated'),
+            titleColor: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary'),
+            bodyColor: getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary'),
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
+            borderWidth: 1,
+            cornerRadius: 8,
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
+            callbacks: {
+              label: function(context) {
+                const value = context.raw;
+                const percentage = ((value / data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                return `${context.label}: ${formatCurrency(value)} (${percentage}%)`;
+              }
             }
           }
+        },
+        animation: {
+          animateScale: true,
+          animateRotate: true,
+          duration: 1000,
+          easing: 'easeOutQuart'
         }
       }
     });
@@ -813,9 +864,9 @@ const FinanzasNube = () => {
       <main className="main-content">
         {/* Dashboard */}
         <div className="dashboard">
-          {/* Resumen */}
+          {/* Resumen con animaciones */}
           <div className="summary-cards">
-            <div className="summary-card balance">
+            <div className="summary-card balance animate-in">
               <div className="card-header">
                 <span className="card-title">Balance Total</span>
                 <div className="card-icon balance">
@@ -823,9 +874,15 @@ const FinanzasNube = () => {
                 </div>
               </div>
               <div className="card-amount">{formatCurrency(balance)}</div>
+              <div className="card-trend">
+                {balance > 0 ? 
+                  <span className="trend positive"><i className="fas fa-arrow-up"></i> Positivo</span> : 
+                  <span className="trend negative"><i className="fas fa-arrow-down"></i> Negativo</span>
+                }
+              </div>
             </div>
 
-            <div className="summary-card income">
+            <div className="summary-card income animate-in" style={{animationDelay: '0.1s'}}>
               <div className="card-header">
                 <span className="card-title">Ingresos del Mes</span>
                 <div className="card-icon income">
@@ -833,9 +890,10 @@ const FinanzasNube = () => {
                 </div>
               </div>
               <div className="card-amount">{formatCurrency(totalIngresos)}</div>
+              <div className="card-subtitle">{transacciones.filter(t => t.tipo === 'ingreso').length} transacciones</div>
             </div>
 
-            <div className="summary-card expense">
+            <div className="summary-card expense animate-in" style={{animationDelay: '0.2s'}}>
               <div className="card-header">
                 <span className="card-title">Gastos del Mes</span>
                 <div className="card-icon expense">
@@ -843,6 +901,7 @@ const FinanzasNube = () => {
                 </div>
               </div>
               <div className="card-amount">{formatCurrency(totalGastos)}</div>
+              <div className="card-subtitle">{transacciones.filter(t => t.tipo === 'gasto').length} transacciones</div>
             </div>
           </div>
 
