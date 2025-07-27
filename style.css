@@ -467,6 +467,9 @@ h3.section-title {
 ::-webkit-scrollbar-track {
   background: #232136;
 }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
