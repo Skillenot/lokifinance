@@ -260,23 +260,7 @@ const FinanzasNube = () => {
             <i className="fas fa-wallet"></i>
             <span>LokiFinance App</span>
           </div>
-          <div className="header-controls">
-            <div className="select-wrapper">
-              <select 
-                className="select" 
-                value={usuarioActivo}
-                onChange={handleUsuarioChange}
-              >
-                {USUARIOS.map(usuario => (
-                  <option key={usuario} value={usuario}>{usuario}</option>
-                ))}
-              </select>
-            </div>
-            <div className="nube-box">
-              <i className="fas fa-cloud"></i>
-              <span style={{marginLeft:'8px'}}>Estás en la nube</span>
-            </div>
-          </div>
+          
         </div>
       </header>
 
@@ -375,7 +359,22 @@ const FinanzasNube = () => {
 
         {/* Sidebar con formularios */}
         <aside className="sidebar">
-          {/* Configuración de salario */}
+          <div className="user-box">
+            <div className="select-wrapper">
+              <select 
+                className="select" 
+                value={usuarioActivo}
+                onChange={handleUsuarioChange}
+              >
+                {USUARIOS.map(usuario => (
+                  <option key={usuario} value={usuario}>{usuario}</option>
+                ))}
+              </select>
+            </div>
+            <span><i className="fas fa-cloud"></i> Estás en la nube</span>
+          </div>
+
+{/* Configuración de salario */}
           <div className="salary-config">
             <h3 className="section-title">
               <i className="fas fa-money-bill-wave"></i>
