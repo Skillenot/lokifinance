@@ -502,5 +502,5 @@ const FinanzasNube = () => {
   );
 };
 
-// Renderizar la app (index.html o main)
+// Renderizar la app (esto debe estar en tu index.html o main)
 ReactDOM.render(<FinanzasNube />, document.getElementById('root'));
