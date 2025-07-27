@@ -1381,3 +1381,50 @@ h3.section-title i,
   text-shadow: 0 0 12px rgba(139, 92, 246, 0.45);
   transform: scale(1.03);
 }
+
+/* Centrar el logo en el header */
+.header-content {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Reducir controles para evitar empuje */
+.header-controls {
+  margin-top: 8px;
+  justify-content: center;
+}
+
+/* Efecto glassmorphism para todas las cajas principales */
+.summary-card,
+.chart-section,
+.transactions-section,
+.form-section,
+.salary-config {
+  background: rgba(30, 30, 30, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.salary-config .current-salary {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Ajustes al logo */
+.logo {
+  justify-content: center;
+}
+
+.logo-text {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
+}
