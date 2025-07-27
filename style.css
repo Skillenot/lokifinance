@@ -1364,3 +1364,20 @@ h3.section-title i,
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
+/* Logo refinado con gradiente estilo vidrio */
+.logo-text {
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+  transition: text-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.logo-text:hover {
+  text-shadow: 0 0 12px rgba(139, 92, 246, 0.45);
+  transform: scale(1.03);
+}
