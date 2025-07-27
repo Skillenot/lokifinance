@@ -1,4 +1,3 @@
-
 :root {
   /* Primitive Color Tokens */
   --color-white: rgba(255, 255, 255, 1);
@@ -1346,4 +1345,22 @@ h3.section-title i,
 .form-section i {
   margin-right: 8px;
   /* Si algún icono va después del texto, puedes usar margin-left en vez de right */
+}
+
+.hero-title {
+  text-align: center;
+  padding: 32px 16px 0;
+}
+
+.hero-title h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #8b5cf6, #9333ea);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 4px 10px rgba(139, 92, 246, 0.25);
+  filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.2));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
