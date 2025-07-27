@@ -13,14 +13,12 @@ const CATEGORIAS_INGRESOS = [
   "Salario", "Bonificaciones", "Ventas", "Inversiones", "Otros"
 ];
 
-// Utilidades
 const formatCurrency = (amount) =>
   new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(amount);
 
 const formatDate = (dateString) =>
   new Date(dateString).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' });
 
-// Notificación
 const Notification = ({ message, type, onClose }) => {
   React.useEffect(() => {
     const timer = setTimeout(onClose, 2500);
@@ -39,12 +37,10 @@ const FinanzasNube = () => {
   const [transacciones, setTransacciones] = React.useState([]);
   const [notification, setNotification] = React.useState(null);
 
-  // Salario desde la nube
   const [salario, setSalario] = React.useState('');
   const [nuevoSalario, setNuevoSalario] = React.useState('');
   const [mostrarConfigSalario, setMostrarConfigSalario] = React.useState(false);
 
-  // Formulario de nueva transacción
   const [formulario, setFormulario] = React.useState({
     descripcion: '',
     cantidad: '',
@@ -52,14 +48,12 @@ const FinanzasNube = () => {
     tipo: 'gasto'
   });
 
-  // Cargar transacciones del usuario desde Supabase
   async function cargarTransacciones(usuario) {
     const { data, error } = await supabase
       .from('transacciones')
       .select('*')
       .eq('usuario', usuario)
       .order('fecha', { ascending: false });
-
     if (error) {
       setNotification({ message: 'Error cargando datos de la nube', type: 'error' });
       setTransacciones([]);
@@ -68,7 +62,6 @@ const FinanzasNube = () => {
     }
   }
 
-  // Cargar salario del usuario desde Supabase
   async function cargarSalario(usuario) {
     const { data, error } = await supabase
       .from('salarios')
@@ -82,7 +75,6 @@ const FinanzasNube = () => {
     }
   }
 
-  // Al cambiar usuario, recargar datos
   React.useEffect(() => {
     cargarTransacciones(usuarioActivo);
     cargarSalario(usuarioActivo);
@@ -90,12 +82,10 @@ const FinanzasNube = () => {
     setNuevoSalario('');
   }, [usuarioActivo]);
 
-  // Resumen
   const totalIngresos = transacciones.filter(t => t.tipo === 'ingreso').reduce((sum, t) => sum + t.cantidad, 0);
   const totalGastos = transacciones.filter(t => t.tipo === 'gasto').reduce((sum, t) => sum + t.cantidad, 0);
   const balance = totalIngresos - totalGastos;
 
-  // Gastos por categoría
   const getGastosPorCategoria = () => {
     const gastos = transacciones.filter(t => t.tipo === 'gasto');
     const gastosPorCategoria = {};
@@ -107,16 +97,13 @@ const FinanzasNube = () => {
 
   const showNotification = (message, type) => setNotification({ message, type });
 
-  // Cambiar usuario
   const handleUsuarioChange = (e) => {
     setUsuarioActivo(e.target.value);
     setFormulario({ descripcion: '', cantidad: '', categoria: '', tipo: 'gasto' });
   };
 
-  // Añadir transacción a la nube
   async function handleSubmitTransaccion(e) {
     e.preventDefault();
-
     if (!formulario.descripcion.trim()) {
       showNotification('Por favor ingresa una descripción', 'error');
       return;
@@ -151,7 +138,6 @@ const FinanzasNube = () => {
     setFormulario({ descripcion: '', cantidad: '', categoria: '', tipo: 'gasto' });
   }
 
-  // Eliminar transacción de la nube
   async function handleEliminarTransaccion(id) {
     const { error } = await supabase
       .from('transacciones')
@@ -165,14 +151,12 @@ const FinanzasNube = () => {
     cargarTransacciones(usuarioActivo);
   }
 
-  // Guardar salario en la nube
   async function handleActualizarSalario(e) {
     e.preventDefault();
     if (!nuevoSalario || parseInt(nuevoSalario) <= 0) {
       showNotification('Por favor ingresa un salario válido', 'error');
       return;
     }
-    // Si ya existe, actualiza, si no, inserta
     const { data, error } = await supabase
       .from('salarios')
       .upsert([
@@ -188,7 +172,6 @@ const FinanzasNube = () => {
     setNuevoSalario('');
   }
 
-  // Chart.js - Gastos por categoría
   React.useEffect(() => {
     const ctx = document.getElementById('gastosChart');
     if (!ctx) return;
@@ -254,15 +237,13 @@ const FinanzasNube = () => {
         />
       )}
 
-      <header className="header">
-        <div className="header-content">
-          <div className="logo">
-            <i className="fas fa-wallet"></i>
-            <span>LokiFinance App</span>
-          </div>
-          
+      {/* HEADER LOGO PILL CENTRADO SOLO ANCHO DEL CONTENIDO */}
+      <div className="container-header">
+        <div className="logo-pill">
+          <i className="fas fa-wallet" style={{ fontSize: '2rem', color: '#a78bfa' }}></i>
+          <span className="logo-text">LokiFinance App</span>
         </div>
-      </header>
+      </div>
 
       <main className="main-content">
         {/* Dashboard */}
@@ -278,7 +259,6 @@ const FinanzasNube = () => {
               </div>
               <div className="card-amount">{formatCurrency(balance)}</div>
             </div>
-
             <div className="summary-card income">
               <div className="card-header">
                 <span className="card-title">Ingresos del Mes</span>
@@ -288,7 +268,6 @@ const FinanzasNube = () => {
               </div>
               <div className="card-amount">{formatCurrency(totalIngresos)}</div>
             </div>
-
             <div className="summary-card expense">
               <div className="card-header">
                 <span className="card-title">Gastos del Mes</span>
@@ -357,11 +336,12 @@ const FinanzasNube = () => {
           </div>
         </div>
 
-        {/* Sidebar con formularios */}
+        {/* SIDEBAR */}
         <aside className="sidebar">
-          <div className="user-box">
-            <select 
-              className="select" 
+          {/* USER/CLOUD PILL - HORIZONTAL Y MODERNO */}
+          <div className="user-cloud-pill">
+            <select
+              className="user-select"
               value={usuarioActivo}
               onChange={handleUsuarioChange}
             >
@@ -369,10 +349,13 @@ const FinanzasNube = () => {
                 <option key={usuario} value={usuario}>{usuario}</option>
               ))}
             </select>
-            <span><i className="fas fa-cloud"></i> Estás en la nube</span>
+            <div className="cloud-status">
+              <i className="fas fa-cloud"></i>
+              Cloud
+              <i className="fas fa-check-circle"></i>
+            </div>
           </div>
-
-{/* Configuración de salario */}
+          {/* Configuración de salario */}
           <div className="salary-config">
             <h3 className="section-title">
               <i className="fas fa-money-bill-wave"></i>
@@ -382,16 +365,16 @@ const FinanzasNube = () => {
               {salario && Number(salario) > 0 ? (
                 <div className="salary-amount">{formatCurrency(Number(salario))}</div>
               ) : (
-                <div className="salary-amount" style={{color:'#a78bfa'}}>No configurado</div>
+                <div className="salary-amount" style={{ color: '#a78bfa' }}>No configurado</div>
               )}
-              <p style={{color:'#aaa'}}>
-                {salario && Number(salario) > 0 
-                  ? "Salario guardado en la nube." 
+              <p style={{ color: '#aaa' }}>
+                {salario && Number(salario) > 0
+                  ? "Salario guardado en la nube."
                   : "No se ha configurado el salario para este usuario."}
               </p>
             </div>
             {!mostrarConfigSalario ? (
-              <button 
+              <button
                 className="btn btn-secondary btn-full"
                 onClick={() => setMostrarConfigSalario(true)}
               >
@@ -416,8 +399,8 @@ const FinanzasNube = () => {
                     <i className="fas fa-save"></i>
                     Guardar
                   </button>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn btn-secondary"
                     onClick={() => {
                       setMostrarConfigSalario(false);
@@ -443,44 +426,41 @@ const FinanzasNube = () => {
                 <select
                   className="form-select"
                   value={formulario.tipo}
-                  onChange={(e) => setFormulario({...formulario, tipo: e.target.value, categoria: ''})}
+                  onChange={(e) => setFormulario({ ...formulario, tipo: e.target.value, categoria: '' })}
                 >
                   <option value="gasto">Gasto</option>
                   <option value="ingreso">Ingreso</option>
                 </select>
               </div>
-
               <div className="form-group">
                 <label className="form-label">Descripción</label>
                 <input
                   type="text"
                   className="form-input"
                   value={formulario.descripcion}
-                  onChange={(e) => setFormulario({...formulario, descripcion: e.target.value})}
+                  onChange={(e) => setFormulario({ ...formulario, descripcion: e.target.value })}
                   placeholder="Ej: Compra de supermercado"
                   required
                 />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Cantidad (COP)</label>
                 <input
                   type="number"
                   className="form-input"
                   value={formulario.cantidad}
-                  onChange={(e) => setFormulario({...formulario, cantidad: e.target.value})}
+                  onChange={(e) => setFormulario({ ...formulario, cantidad: e.target.value })}
                   placeholder="0"
                   min="1"
                   required
                 />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Categoría</label>
                 <select
                   className="form-select"
                   value={formulario.categoria}
-                  onChange={(e) => setFormulario({...formulario, categoria: e.target.value})}
+                  onChange={(e) => setFormulario({ ...formulario, categoria: e.target.value })}
                   required
                 >
                   <option value="">Selecciona una categoría</option>
@@ -489,7 +469,6 @@ const FinanzasNube = () => {
                   ))}
                 </select>
               </div>
-
               <button type="submit" className="btn btn-primary btn-full">
                 <i className="fas fa-plus"></i>
                 Agregar Transacción
@@ -502,5 +481,4 @@ const FinanzasNube = () => {
   );
 };
 
-// Renderizar la app (esto debe estar en tu index.html o main)
 ReactDOM.render(<FinanzasNube />, document.getElementById('root'));
