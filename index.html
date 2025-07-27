@@ -19,7 +19,18 @@
     <!-- Contenedor principal de la aplicación React -->
     
 <div id="root"></div>
-    
+    <script>
+  // Hace que la navbar tenga la clase .scrolled al bajar
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    if (window.scrollY > 8) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+</script>
     <!-- Script principal de la aplicación -->
      <script type="module">
   window.supabase = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm')
