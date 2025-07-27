@@ -258,7 +258,7 @@ const FinanzasNube = () => {
         <div className="header-content">
           <div className="logo">
             <i className="fas fa-wallet"></i>
-            <span>Finanzas en la Nube</span>
+            <span>LokiFinance</span>
           </div>
           <div className="header-controls">
             <div className="select-wrapper">
