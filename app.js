@@ -360,17 +360,15 @@ const FinanzasNube = () => {
         {/* Sidebar con formularios */}
         <aside className="sidebar">
           <div className="user-box">
-            <div className="select-wrapper">
-              <select 
-                className="select" 
-                value={usuarioActivo}
-                onChange={handleUsuarioChange}
-              >
-                {USUARIOS.map(usuario => (
-                  <option key={usuario} value={usuario}>{usuario}</option>
-                ))}
-              </select>
-            </div>
+            <select 
+              className="select" 
+              value={usuarioActivo}
+              onChange={handleUsuarioChange}
+            >
+              {USUARIOS.map(usuario => (
+                <option key={usuario} value={usuario}>{usuario}</option>
+              ))}
+            </select>
             <span><i className="fas fa-cloud"></i> Estás en la nube</span>
           </div>
 
@@ -504,5 +502,5 @@ const FinanzasNube = () => {
   );
 };
 
-// Renderizar la app (esto debe estar en tu index.html o main)
+// Renderizar la app (index.html o main)
 ReactDOM.render(<FinanzasNube />, document.getElementById('root'));
