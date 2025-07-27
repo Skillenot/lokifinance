@@ -814,139 +814,6 @@ body {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--color-background) 0%, #1a1a2e 100%);
 }
-/* Container central de header y contenido */
-.container-header {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 16px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Logo pill */
-.logo-pill {
-  background: rgba(139, 92, 246, 0.17);
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 32px 10px 24px;
-  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.16);
-}
-
-.logo-pill .logo-text {
-  font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #a855f7, #9333ea);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  letter-spacing: -1px;
-}
-
-/* Glass pill user-cloud horizontal */
-.user-cloud-pill {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(44, 44, 63, 0.34);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 22px;
-  padding: 6px 18px 6px 14px;
-  border: 1px solid rgba(139, 92, 246, 0.18);
-  margin-bottom: 24px;
-  margin-top: 12px;
-  box-shadow: 0 2px 12px rgba(139,92,246,0.07);
-  min-width: 0;
-}
-
-.user-cloud-pill select {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-weight: 500;
-  font-size: 1rem;
-  outline: none;
-  padding: 6px 10px 6px 2px;
-  min-width: 90px;
-  appearance: none;
-}
-
-.user-cloud-pill select option {
-  background: #24203c;
-  color: #fff;
-}
-
-.user-cloud-pill .cloud-status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 1.08rem;
-  font-weight: 500;
-  color: #a78bfa;
-}
-
-.user-cloud-pill .cloud-status .fa-cloud {
-  font-size: 1.2em;
-  color: #a78bfa;
-}
-
-.user-cloud-pill .cloud-status .fa-check-circle {
-  color: #22d266;
-  font-size: 1.18em;
-}
-
-/* Restyle selects e inputs glass y oscuros */
-.form-input,
-.form-select,
-.form-textarea,
-select,
-input,
-textarea {
-  background: rgba(30, 30, 35, 0.70) !important;
-  color: #fff !important;
-  border: 1px solid rgba(139, 92, 246, 0.20) !important;
-  box-shadow: none;
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder,
-input::placeholder,
-textarea::placeholder {
-  color: #b8b7cf !important;
-}
-
-.form-select option,
-select option {
-  background: #181823 !important;
-  color: #fff !important;
-}
-
-/* Glass cards y boxes */
-.summary-card,
-.chart-section,
-.transactions-section,
-.form-section,
-.salary-config {
-  background: rgba(30, 30, 30, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
-  transition: all 0.3s ease;
-}
-
-/* No sticky header */
-.header {
-  position: static !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
 
 .header-content {
   max-width: 1200px;
@@ -1694,4 +1561,137 @@ select.select:focus {
   outline: none;
   border-color: var(--color-purple-primary);
   box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+}
+
+/* Container central de header y contenido */
+.container-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Logo pill */
+.logo-pill {
+  background: rgba(139, 92, 246, 0.17);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 32px 10px 24px;
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.16);
+}
+
+.logo-pill .logo-text {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: -1px;
+}
+
+/* Glass pill user-cloud horizontal */
+.user-cloud-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(44, 44, 63, 0.34);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 22px;
+  padding: 6px 18px 6px 14px;
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  margin-bottom: 24px;
+  margin-top: 12px;
+  box-shadow: 0 2px 12px rgba(139,92,246,0.07);
+  min-width: 0;
+}
+
+.user-cloud-pill select {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  outline: none;
+  padding: 6px 10px 6px 2px;
+  min-width: 90px;
+  appearance: none;
+}
+
+.user-cloud-pill select option {
+  background: #24203c;
+  color: #fff;
+}
+
+.user-cloud-pill .cloud-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: #a78bfa;
+}
+
+.user-cloud-pill .cloud-status .fa-cloud {
+  font-size: 1.2em;
+  color: #a78bfa;
+}
+
+.user-cloud-pill .cloud-status .fa-check-circle {
+  color: #22d266;
+  font-size: 1.18em;
+}
+
+/* Restyle selects e inputs glass y oscuros */
+.form-input,
+.form-select,
+.form-textarea,
+select,
+input,
+textarea {
+  background: rgba(30, 30, 35, 0.70) !important;
+  color: #fff !important;
+  border: 1px solid rgba(139, 92, 246, 0.20) !important;
+  box-shadow: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #b8b7cf !important;
+}
+
+.form-select option,
+select option {
+  background: #181823 !important;
+  color: #fff !important;
+}
+
+/* Glass cards y boxes */
+.summary-card,
+.chart-section,
+.transactions-section,
+.form-section,
+.salary-config {
+  background: rgba(30, 30, 30, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+  transition: all 0.3s ease;
+}
+
+/* No sticky header */
+.header {
+  position: static !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
