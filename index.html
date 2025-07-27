@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LokiFinance</title>
-  <link rel="stylesheet" href="style_lokifinance_final.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas Personales - Santiago & Yuanira</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module">
-    window.supabase = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm')
-  </script>
-  <script type="text/babel" src="app_lokifinance_final.js"></script>
+    <!-- Contenedor principal de la aplicación React -->
+    
+<div id="root"></div>
+    
+    <!-- Script principal de la aplicación -->
+     <script type="module">
+  window.supabase = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm')
+</script>
+    <script type="text/babel" src="app.js"></script>
 </body>
 </html>
