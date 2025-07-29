@@ -140,9 +140,9 @@ h3.section-title {
   background: var(--color-surface);
   border-radius: var(--border-radius);
   padding: 2.2rem 1.4rem;
-box-shadow: 12px 13px 24px -4px rgba(108,18,144,0.53);
--webkit-box-shadow: 12px 13px 24px -4px rgba(108,18,144,0.53);
--moz-box-shadow: 12px 13px 24px -4px rgba(108,18,144,0.53);
+box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
+-webkit-box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
+-moz-box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
   border: 1.5px solid var(--color-border);
   transition: transform var(--transition), box-shadow var(--transition);
   position: relative;
