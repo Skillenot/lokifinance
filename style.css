@@ -140,7 +140,7 @@ h3.section-title {
   background: var(--color-surface);
   border-radius: var(--border-radius);
   padding: 2.2rem 1.4rem;
-  box-shadow: 10px 10px 15px var(--color-card-glow);
+  box-shadow: var(--color-card-glow);
   border: 1.5px solid var(--color-border);
   transition: transform var(--transition), box-shadow var(--transition);
   position: relative;
