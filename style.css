@@ -7,7 +7,7 @@
   --color-bg-gradient: linear-gradient(135deg, #18181b 0%, #221e32 100%);
   --color-surface: #232136;
   --color-surface-elevated: #2a2139;
-  --color-card-glow: 0 4px 32px 0 #a78bfa44;
+  --color-card-glow: 0 4px 15px 0 #a78bfa44;
   --color-primary: #a78bfa;
   --color-primary-hover: #c4b5fd;
   --color-primary-active: #8b5cf6;
@@ -140,9 +140,7 @@ h3.section-title {
   background: var(--color-surface);
   border-radius: var(--border-radius);
   padding: 2.2rem 1.4rem;
-box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
--webkit-box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
--moz-box-shadow: 12px 13px 24px -4px rgba(78,28,111,0.53);
+  box-shadow: var(--color-card-glow);
   border: 1.5px solid var(--color-border);
   transition: transform var(--transition), box-shadow var(--transition);
   position: relative;
