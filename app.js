@@ -347,7 +347,7 @@ const FinanzasNube = () => {
             </h3>
             <div className="current-salary">
               <div className="salary-amount">{salario ? formatCurrency(Number(salario)) : <span style={{color:'#a78bfa'}}>No configurado</span>}</div>
-              <p>Salario manual (solo visible localmente)</p>
+              <p>Salario - Funcionalidades aplicadas pronto...</p>
             </div>
             {!mostrarConfigSalario ? (
               <button 
